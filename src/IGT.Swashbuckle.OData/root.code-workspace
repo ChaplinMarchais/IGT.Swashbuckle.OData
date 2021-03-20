@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "IGT.Swashbuckle.OData",
+			"path": "."
+		},
+		{
+			"name": "SampleWebApi",
+			"path": "../SampleWebApi"
+		}
+	],
+	"settings": {}
+}
