@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.ReDoc;
 
 namespace IGT.Swashbuckle.OData.SampleWebApi
 {
@@ -53,10 +54,19 @@ namespace IGT.Swashbuckle.OData.SampleWebApi
             {
                 endpoints.MapControllers();
             });
+            UseOpenApiDocs(app);
+        }
 
+        private static void UseOpenApiDocs(IApplicationBuilder app)
+        {
             app.UseOpenApi();
-            app.UseSwaggerUi3(settings => {
+            app.UseSwaggerUi3(settings =>
+            {
                 // Config the SwaggerUI settings here
+            });
+            app.UseReDoc(options =>
+            {
+                options.SpecUrl = "/swagger/v1/swagger.json";
             });
         }
     }
