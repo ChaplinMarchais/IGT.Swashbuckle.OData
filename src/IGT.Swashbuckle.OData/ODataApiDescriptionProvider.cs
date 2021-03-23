@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using IGT.Swashbuckle.OData.Configuration;
 
 namespace IGT.Swashbuckle.OData
 {

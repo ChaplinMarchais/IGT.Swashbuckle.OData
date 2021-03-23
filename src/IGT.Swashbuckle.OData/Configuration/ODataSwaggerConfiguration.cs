@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace IGT.Swashbuckle.OData
+namespace IGT.Swashbuckle.OData.Configuration
 {
     public class ODataSwaggerConfiguration
     {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
+using IGT.Swashbuckle.OData.Configuration;
 
 namespace IGT.Swashbuckle.OData
 {
