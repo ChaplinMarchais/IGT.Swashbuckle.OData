@@ -11,9 +11,8 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace IGT.Swashbuckle.OData.Configuration
 {
-    public class ODataSwaggerConfiguration
+    public class ODataSwaggerConfiguration : SwaggerUIOptions
     {
-        public SwaggerUIOptions swaggerUIOptions{ get; set; }
         public IApiDescriptionProvider GetApiDescriptionProvider
             => new ODataApiDescriptionProvider(this);
 
