@@ -27,7 +27,8 @@
 		"christian-kohler.npm-intellisense",
 		"jmrog.vscode-nuget-package-manager",
 		"visualstudioexptteam.vscodeintellicode",
-		"dotjoshjohnson.xml"
+		"dotjoshjohnson.xml",
+		"jchannon.csharpextensions"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
