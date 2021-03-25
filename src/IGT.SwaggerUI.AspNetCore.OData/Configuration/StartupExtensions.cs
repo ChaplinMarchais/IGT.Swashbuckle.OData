@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
-namespace IGT.Swashbuckle.OData.Configuration
+namespace IGT.SwaggerUI.AspNetCore.OData.Configuration
 {
     public static class StartupExtensions
     {

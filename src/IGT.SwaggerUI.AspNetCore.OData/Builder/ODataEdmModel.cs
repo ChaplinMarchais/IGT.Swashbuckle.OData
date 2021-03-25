@@ -1,7 +1,7 @@
 using Microsoft.OData.Edm;
 
 
-namespace IGT.Swashbuckle.OData.Builder
+namespace IGT.SwaggerUI.AspNetCore.OData
 {
     public class ODataEdmModel : EdmModel
     {

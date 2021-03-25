@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
-using IGT.Swashbuckle.OData.Configuration;
-
-namespace IGT.Swashbuckle.OData
+using IGT.SwaggerUI.AspNetCore.OData.Configuration;
+namespace IGT.SwaggerUI.AspNetCore.OData
 {
     public class SwaggerODataProvider : ISwaggerProvider
     {

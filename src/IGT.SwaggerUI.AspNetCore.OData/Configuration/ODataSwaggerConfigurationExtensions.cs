@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace IGT.Swashbuckle.OData.Configuration
+namespace IGT.SwaggerUI.AspNetCore.OData.Configuration
 {
     public static class ODataSwaggerConfigurationExtensions
     {

@@ -8,8 +8,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1"/>
     <PackageReference Include="NSwag.AspNetCore" Version="13.10.8"/>
     <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.1.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ApiExplorer" Version="2.2.0"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../IGT.SwaggerUI.AspNetCore.OData/IGT.SwaggerUI.AspNetCore.OData.csproj" />
+    <ProjectReference Include="../IGT.SwaggerUI.AspNetCore.OData/IGT.SwaggerUI.AspNetCore.OData.csproj"/>
   </ItemGroup>
 </Project>

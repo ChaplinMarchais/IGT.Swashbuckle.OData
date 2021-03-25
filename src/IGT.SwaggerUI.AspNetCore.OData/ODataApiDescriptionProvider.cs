@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using IGT.Swashbuckle.OData.Configuration;
+using IGT.SwaggerUI.AspNetCore.OData.Configuration;
 
-namespace IGT.Swashbuckle.OData
+namespace IGT.SwaggerUI.AspNetCore.OData
 {
     internal class ODataApiDescriptionProvider : IApiDescriptionProvider
     {
