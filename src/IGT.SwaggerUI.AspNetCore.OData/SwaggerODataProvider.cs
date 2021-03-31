@@ -14,7 +14,7 @@ namespace IGT.SwaggerUI.AspNetCore.OData
             this.docConfig = docConfig;
         }
 
-        public OpenApiDocument GetSwagger(string documentName, string host = null, string basePath = null)
+        public OpenApiDocument GetSwagger(string documentName, string? host = null, string? basePath = null)
         {
             throw new NotImplementedException();
         }

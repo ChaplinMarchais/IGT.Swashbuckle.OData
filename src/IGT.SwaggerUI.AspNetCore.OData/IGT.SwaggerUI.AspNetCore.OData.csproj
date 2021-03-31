@@ -2,6 +2,10 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1"/>
@@ -12,5 +16,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ApiExplorer" Version="2.2.0"/>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.*"/>
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.*"/>
+    <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.0-preview3"/>
   </ItemGroup>
 </Project>

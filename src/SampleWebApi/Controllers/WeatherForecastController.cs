@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.Logging;
 
 namespace IGT.Swashbuckle.OData.SampleWebApi.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    // [ApiController]
+    // [Route("[controller]")]
+    public class WeatherForecastController : ODataController
     {
         private static readonly string[] Summaries = new[]
         {
@@ -23,17 +25,16 @@ namespace IGT.Swashbuckle.OData.SampleWebApi.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet, EnableQuery]
+        public IActionResult Get(WeatherForecast? weather = null)
         {
             var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            return weather is null ? Ok(Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = rng.Next(-20, 55),
                 Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            })) : Ok(weather);
         }
     }
 }

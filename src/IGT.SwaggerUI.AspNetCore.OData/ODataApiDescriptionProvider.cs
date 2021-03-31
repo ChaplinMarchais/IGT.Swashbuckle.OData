@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using IGT.SwaggerUI.AspNetCore.OData.Configuration;
 
@@ -16,7 +17,7 @@ namespace IGT.SwaggerUI.AspNetCore.OData
 
         public void OnProvidersExecuted(ApiDescriptionProviderContext context)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         public void OnProvidersExecuting(ApiDescriptionProviderContext context)

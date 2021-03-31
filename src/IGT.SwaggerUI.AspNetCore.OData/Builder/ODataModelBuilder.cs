@@ -1,29 +1,29 @@
 using System.Reflection;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System;
 using Microsoft.OData.Edm;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.OData.ModelBuilder;
 
 namespace IGT.SwaggerUI.AspNetCore.OData
 {
-    public class ODataModelBuilder
+    public class ODataModelBuilder : ODataConventionModelBuilder
     {
-        private readonly IEdmModel _edm = null;
-        public IEdmModel Edm => _edm;
+        public ODataEdmModel Edm => _edm ??= new ODataEdmModel();
+        private ODataEdmModel? _edm = null;
 
-        private IEdmEntityContainer _baseContainer;
-
-        public ODataModelBuilder(Action<IEdmEntityContainer> baseContainerSetup = null)
+        public ODataModelBuilder(string baseContainerName, ODataEdmModel? edm) : base()
         {
-            _baseContainer = new EdmEntityContainer(GetBaseNamespace(), "default");
-            baseContainerSetup(_baseContainer);
+            if(edm is not null) _edm = edm;
+            this.ContainerName = baseContainerName;
+        }
 
-            if(_edm is null){
-                _edm = new ODataEdmModel();
-            }
+        public ODataModelBuilder(string baseContainerName = "Default Base Container", Action<ODataEdmModel>? edmConfiguration = null) : this(baseContainerName, edm: null)
+        {
+            _edm ??= new ODataEdmModel();
 
-            string GetBaseNamespace() => this.GetType().Namespace;
+            if (edmConfiguration is not null)
+                edmConfiguration(_edm);
         }
     }
 }
