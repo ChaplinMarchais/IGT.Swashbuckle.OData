@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using IGT.SwaggerUI.AspNetCore.OData.Configuration;
+using IGT.SwaggerUI.AspNetCore.OData.Extensions;
 using Microsoft.OpenApi.Models;
 using IGT.SwaggerUI.AspNetCore.OData;
 using Microsoft.Extensions.Logging;
@@ -30,12 +30,13 @@ namespace IGT.Swashbuckle.OData.SampleWebApi
                 ops.Conventions.Add(new ODataSwaggerAppConvention(loggerFactory.CreateLogger(typeof(ODataSwaggerAppConvention))));
             });
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "IGT.Swashbuckle.OData.SampleWebApi", Version = "v1" });
-                c.SupportNonNullableReferenceTypes();
-            });
-            services.AddOpenApiDocument();
+            // services.AddSwaggerGen(c =>
+            // {
+            //     c.SwaggerDoc("v1", new OpenApiInfo { Title = "IGT.Swashbuckle.OData.SampleWebApi", Version = "v1" });
+            //     c.SupportNonNullableReferenceTypes();
+            // });
+
+            services.AddSwaggerWithOData(loggerFactory.CreateLogger<Startup>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,12 +46,7 @@ namespace IGT.Swashbuckle.OData.SampleWebApi
             {
                 app.UseDeveloperExceptionPage();
 
-                app.UseSwaggerWithOData(options =>
-                {
-                    options.DocumentTitle = "Custom OData API Documentation";
-                });
                 // app.UseSwagger();
-                // app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "IGT.Swashbuckle.OData.SampleWebApi v1"));
             }
 
             app.UseHttpsRedirection();
@@ -61,17 +57,21 @@ namespace IGT.Swashbuckle.OData.SampleWebApi
             {
                 endpoints.MapControllers();
             });
-            UseOpenApiDocs(app);
-        }
 
-        private static void UseOpenApiDocs(IApplicationBuilder app)
-        {
-            app.UseOpenApi();
-            app.UseSwaggerUi3(settings =>
+            // UseOpenApiDocs(app);
+            app.UseSwaggerWithOData(options =>
             {
-                // Config the SwaggerUI settings here
-                settings.DocumentTitle = "OData API Documentation";
+                options.SwaggerUIOptions.DocumentTitle = "Custom OData API Documentation";
             });
         }
+
+        // private static void UseOpenApiDocs(IApplicationBuilder app)
+        // {
+        //     app.UseSwaggerUi3(settings =>
+        //     {
+        //         // Config the SwaggerUI settings here
+        //         settings.DocumentTitle = "OData API Documentation";
+        //     });
+        // }
     }
 }
