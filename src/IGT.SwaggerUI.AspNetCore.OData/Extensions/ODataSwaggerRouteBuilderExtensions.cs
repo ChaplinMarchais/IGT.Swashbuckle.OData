@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OData.Edm;
+using System;
 
 namespace IGT.SwaggerUI.AspNetCore.OData.Extensions
 {
@@ -7,7 +8,8 @@ namespace IGT.SwaggerUI.AspNetCore.OData.Extensions
     {
         public static IEndpointRouteBuilder MapSwaggerWithODataRoute(this IEndpointRouteBuilder builder, ODataSwaggerContext context, string? prefix = null)
         {
-            var edm = context.ResolveEdm(context.IncludeDefaultProvider);
+            var x = builder.ServiceProvider;
+            var edm = context.ResolveEdmModels();
 
             return builder;
         }

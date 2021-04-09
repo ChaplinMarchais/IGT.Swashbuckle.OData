@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -5,16 +7,14 @@ namespace IGT.SwaggerUI.AspNetCore.OData.Edm
 {
     public struct DefaultEdmOptions
     {
-        public DefaultEdmOptions(Assembly target)
+        private readonly IEnumerable<Tuple<string, Assembly>> targets;
+
+        public DefaultEdmOptions(IAssemblyProvider assemblyProvider)
         {
-            Target = target;
-            Namespace = Target.DefinedTypes.FirstOrDefault()?.Namespace ?? "IGT.FC.Data.Edm";
-            ContainerName = Target.FullName ?? Namespace;
+            var assemblies = assemblyProvider.ResolveAssemblies;
+            targets = assemblies.Select<Assembly, Tuple<string, Assembly>>(a => new(a.GetName().FullName, a));
         }
 
-        public string Namespace { get; private set; }
-
-        public string ContainerName {get; private set;}
-        internal Assembly Target { get; }
+        public IEnumerable<Tuple<string, Assembly>> Targets => targets;
     }
 }

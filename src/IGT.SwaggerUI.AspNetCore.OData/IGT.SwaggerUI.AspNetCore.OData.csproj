@@ -17,5 +17,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.*"/>
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.0-preview3"/>
+    <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="2.0.0"/>
   </ItemGroup>
 </Project>

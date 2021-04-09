@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using IGT.SwaggerUI.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -8,24 +11,29 @@ namespace IGT.SwaggerUI.AspNetCore.OData.Edm
 {
     public static class DefaultEdmGenerator
     {
-        public static IEdmModel GetEdmModel(DefaultEdmOptions options)
+        public static IEnumerable<IEdmModel> GetEdmModels(DefaultEdmOptions options)
         {
-            var modelBuilder = new ODataConventionModelBuilder();
-            modelBuilder.Namespace = options.Namespace;
-            modelBuilder.ContainerName = options.ContainerName;
-            modelBuilder.EnableLowerCamelCase();
+            foreach(var target in options.Targets)
+            {
+                (string name, Assembly asm) = target;
 
-            var odataControllerTypes = options.Target.GetChildTypesAssignableTo<ODataController>();
+                var modelBuilder = new ODataConventionModelBuilder();
+                modelBuilder.Namespace = name;
+                modelBuilder.ContainerName = name;
+                modelBuilder.EnableLowerCamelCase();
 
-            var actionDTOTypes = odataControllerTypes.ResolveActionDTOs<EnableQueryAttribute>();
+                var odataControllerTypes = asm.GetChildTypesAssignableTo<ODataController>();
 
-            if(actionDTOTypes is not null)
-                foreach (var dtoType in actionDTOTypes)
-                {
-                    modelBuilder.AddEntityType(dtoType);
-                }
+                var actionDTOTypes = odataControllerTypes.ResolveActionDTOs<EnableQueryAttribute>();
 
-            return modelBuilder.GetEdmModel();
+                if(actionDTOTypes is not null)
+                    foreach (var dtoType in actionDTOTypes)
+                    {
+                        modelBuilder.AddEntityType(dtoType);
+                    }
+
+                yield return modelBuilder.GetEdmModel();
+            }
         }
     }
 }

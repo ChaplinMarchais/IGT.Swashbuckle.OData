@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.OData.Routing;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using StructureMap;
 
 namespace IGT.SwaggerUI.AspNetCore.OData.Extensions
 {
@@ -28,7 +29,7 @@ namespace IGT.SwaggerUI.AspNetCore.OData.Extensions
             return services;
         }
 
-        public static IApplicationBuilder UseSwaggerWithOData(this IApplicationBuilder app, IServiceProvider services, ODataSwaggerContext options)
+        public static IApplicationBuilder UseSwaggerWithOData(this IApplicationBuilder app, IContainer container, ODataSwaggerContext options)
         {
             app.UseEndpoints(routeBuilder => {
                 routeBuilder.MapSwaggerWithODataRoute(options);
@@ -45,25 +46,30 @@ namespace IGT.SwaggerUI.AspNetCore.OData.Extensions
             return app;
         }
 
-        public static IApplicationBuilder UseSwaggerWithOData(this IApplicationBuilder app, Action<ODataSwaggerContext>? optionsSetup = null)
+        public static IApplicationBuilder UseSwaggerWithOData(this IApplicationBuilder app, Action<IContainer, ODataSwaggerContext>? optionsSetup = null)
         {
             // Create a new DI scope for the OData Middleware to use
             using var services = app.ApplicationServices.CreateScope();
 
+            // Setup a new StructureMap container which extends the host ServiceCollection
+            var container = new Container();
+            container.Configure(config => {
+                config.AddRegistry(new ODataSwaggerRegistry());
+                config.Populate(services.ServiceProvider as IServiceCollection);
+            });
+
             // Check to see if there is any configuration data that has been configured and monitor it for changes
             var configMonitor = services.ServiceProvider.GetRequiredService<IOptionsMonitor<ODataSwaggerContext>>();
-
-            ODataSwaggerContext latestConfig = new ODataSwaggerContext();
-
+            ODataSwaggerContext? latestConfig = new ODataSwaggerContext(container.GetInstance<IAssemblyProvider>());
             configMonitor.OnChange<ODataSwaggerContext>(x => GetLatestConfig(x, latestConfig));
 
             if (optionsSetup != null)
-                optionsSetup?.Invoke(latestConfig);
+                optionsSetup?.Invoke(container, latestConfig);
 
-            return app.UseSwaggerWithOData(services.ServiceProvider, latestConfig);
+            return app.UseSwaggerWithOData(container, latestConfig);
         }
 
-        private static T? GetLatestConfig<T>(T updatedConfig, T latestConfig) => latestConfig?.GetHashCode() != updatedConfig?.GetHashCode()
+        private static T? GetLatestConfig<T>(T updatedConfig, T? latestConfig) => latestConfig?.GetHashCode() != updatedConfig?.GetHashCode()
                             ? updatedConfig
                             : latestConfig;
     }

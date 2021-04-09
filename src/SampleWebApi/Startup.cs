@@ -59,7 +59,7 @@ namespace IGT.Swashbuckle.OData.SampleWebApi
             });
 
             // UseOpenApiDocs(app);
-            app.UseSwaggerWithOData(options =>
+            app.UseSwaggerWithOData((container, options) =>
             {
                 options.SwaggerUIOptions.DocumentTitle = "Custom OData API Documentation";
             });

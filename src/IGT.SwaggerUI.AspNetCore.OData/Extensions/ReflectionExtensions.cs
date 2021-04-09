@@ -26,7 +26,7 @@ namespace IGT.SwaggerUI.AspNetCore.OData.Extensions
         {
             actionMembersInfo
                 .DoFor(m => ((MethodInfo)m).ReturnType.IsGenericType,
-                            x => x.Select(m => ((MethodInfo)m).ReturnType.GenericTypeArguments[1]),
+                            x => x.Select(m => ((MethodInfo)m).ReturnType.GenericTypeArguments[0]),
                             out var resultTypes1)
                 .DoFor(m => !((MethodInfo)m).ReturnType.IsGenericType && ((MethodInfo)m).ReturnType != typeof(ActionResult),
                             x => x.Select(m => ((MethodInfo)m).ReturnType),
