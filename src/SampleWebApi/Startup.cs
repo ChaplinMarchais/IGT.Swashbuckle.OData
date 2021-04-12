@@ -50,15 +50,17 @@ namespace IGT.Swashbuckle.OData.SampleWebApi
                 // app.UseSwagger();
             }
 
-            app.UseHttpsRedirection();
-            app.UseRouting();
             app.UseAuthorization();
-
-            // UseOpenApiDocs(app);
+            
             app.UseSwaggerWithOData((container, options) =>
             {
                 //Configure any overrides for both SwaggerUI and SwaggerGen here
             });
+
+            app.UseHttpsRedirection();
+            // app.UseRouting();
+
+            // UseOpenApiDocs(app);
         }
 
         // private static void UseOpenApiDocs(IApplicationBuilder app)

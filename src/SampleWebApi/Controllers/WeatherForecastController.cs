@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace IGT.Swashbuckle.OData.SampleWebApi.Controllers
 {
     // [ApiController]
-    // [Route("[controller]")]
+    [Route("[controller]")]
     public class WeatherForecastController : ODataController
     {
         private static readonly string[] Summaries = new[]
