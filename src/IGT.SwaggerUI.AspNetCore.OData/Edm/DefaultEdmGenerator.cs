@@ -17,7 +17,7 @@ namespace IGT.SwaggerUI.AspNetCore.OData.Edm
             {
                 (string name, Assembly asm) = target;
 
-                var modelBuilder = new ODataConventionModelBuilder();
+                var modelBuilder = new ODataConventionModelBuilder(new DefaultAssemblyResolver());
                 modelBuilder.Namespace = name;
                 modelBuilder.ContainerName = name;
                 modelBuilder.EnableLowerCamelCase();

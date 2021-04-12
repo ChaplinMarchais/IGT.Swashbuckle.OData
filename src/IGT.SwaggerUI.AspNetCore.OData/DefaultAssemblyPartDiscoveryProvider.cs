@@ -25,7 +25,8 @@ namespace IGT.SwaggerUI.AspNetCore.OData
             "Microsoft.AspNetCore.Mvc.Razor",
             "Microsoft.AspNetCore.Mvc.Razor.Host",
             "Microsoft.AspNetCore.Mvc.TagHelpers",
-            "Microsoft.AspNetCore.Mvc.ViewFeatures"
+            "Microsoft.AspNetCore.Mvc.ViewFeatures",
+            "Microsoft.Extensions.Configuration"
         };
 
         internal static IEnumerable<ApplicationPart> DiscoverAssemblyParts(string entryAssemblyName)
@@ -42,7 +43,7 @@ namespace IGT.SwaggerUI.AspNetCore.OData
                 return new[] { entryAssembly };
 
             return GetLibraries(context)
-                .SelectMany(lib => lib.RuntimeAssemblyGroups.GetDefaultGroup().AssetPaths)
+                .SelectMany<RuntimeLibrary, string?>(lib => lib.RuntimeAssemblyGroups?.GetDefaultGroup()?.AssetPaths ?? Enumerable.Empty<string>())
                 .Select(Load)
                 .Where(asm => asm is not null);
         }

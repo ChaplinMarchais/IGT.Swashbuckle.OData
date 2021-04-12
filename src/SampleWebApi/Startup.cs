@@ -7,6 +7,7 @@ using IGT.SwaggerUI.AspNetCore.OData.Extensions;
 using Microsoft.OpenApi.Models;
 using IGT.SwaggerUI.AspNetCore.OData;
 using Microsoft.Extensions.Logging;
+using Lamar;
 
 namespace IGT.Swashbuckle.OData.SampleWebApi
 {
@@ -22,13 +23,14 @@ namespace IGT.Swashbuckle.OData.SampleWebApi
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        // This method gets called by Lamar. Should be used as a stand-in for ConfigureServices()
+        public void ConfigureContainer(ServiceRegistry services)
         {
-            services.AddMvc(ops =>
-            {
-                ops.Conventions.Add(new ODataSwaggerAppConvention(loggerFactory.CreateLogger(typeof(ODataSwaggerAppConvention))));
-            });
+            // services.AddMvc(ops =>
+            //     {
+            //         ops.Conventions.Add(new ODataSwaggerAppConvention(loggerFactory.CreateLogger(typeof(ODataSwaggerAppConvention))));
+            //     })
+            //     .AddControllersAsServices();
 
             // services.AddSwaggerGen(c =>
             // {
@@ -36,10 +38,9 @@ namespace IGT.Swashbuckle.OData.SampleWebApi
             //     c.SupportNonNullableReferenceTypes();
             // });
 
-            services.AddSwaggerWithOData(loggerFactory.CreateLogger<Startup>());
+            services.AddSwaggerWithOData(Configuration, loggerFactory.CreateLogger("Debug"));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -53,15 +54,10 @@ namespace IGT.Swashbuckle.OData.SampleWebApi
             app.UseRouting();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
             // UseOpenApiDocs(app);
             app.UseSwaggerWithOData((container, options) =>
             {
-                options.SwaggerUIOptions.DocumentTitle = "Custom OData API Documentation";
+                //Configure any overrides for both SwaggerUI and SwaggerGen here
             });
         }
 

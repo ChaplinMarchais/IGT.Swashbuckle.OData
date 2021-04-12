@@ -16,23 +16,25 @@ using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
+using Microsoft.Extensions.Options;
 
 namespace IGT.SwaggerUI.AspNetCore.OData
 {
     public class ODataSwaggerContext
     {
-        private const string DEFAULT_SWAGGER_INFO_ENDPOINT = "/swagger/v1/swagger.json";
         private IAssemblyProvider _assemblyProvider;
 
-        public ODataSwaggerContext(IAssemblyProvider assemblyProvider)
+        public SwaggerUIOptions SwaggerUIOptions { get { return _swaggerUIOptions ??= new SwaggerUIOptions(); } internal set => _swaggerUIOptions = value; }
+
+        public IOptions<ODataSwaggerOptions> Options { get; }
+
+        private SwaggerUIOptions? _swaggerUIOptions;
+
+        public ODataSwaggerContext(IOptions<ODataSwaggerOptions> options, IAssemblyProvider assemblyProvider)
         {
+            Options = options;
             _assemblyProvider = assemblyProvider;
         }
-
-        public string SwaggerInfoUrl { get; set; } = DEFAULT_SWAGGER_INFO_ENDPOINT;
-
-        public SwaggerUIOptions SwaggerUIOptions { get { return _swaggerUIOptions ??= new SwaggerUIOptions(); } set => _swaggerUIOptions = value; }
-        private SwaggerUIOptions? _swaggerUIOptions;
 
         internal IEnumerable<IEdmModel> ResolveEdmModels()
         {

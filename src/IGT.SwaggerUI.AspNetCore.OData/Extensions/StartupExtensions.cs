@@ -1,76 +1,92 @@
-using System.Reflection;
 using System;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.OData.ModelBuilder;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.OData.Routing;
 using Microsoft.AspNetCore.OData;
-using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using StructureMap;
+using Lamar;
+using System.Linq;
+using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.OData.Formatter;
 
 namespace IGT.SwaggerUI.AspNetCore.OData.Extensions
 {
     public static class StartupExtensions
     {
-        public static IServiceCollection AddSwaggerWithOData(this IServiceCollection services, ILogger logger)
+        public static ServiceRegistry AddSwaggerWithOData(this ServiceRegistry services, IConfiguration configuration, ILogger logger)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddMvc(options => {
+                foreach (var formatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+                {
+                    formatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+                foreach (var formatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+                {
+                    formatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+            });
 
-            //services.AddOpenApiDocument();
-            services.AddOData();
-            logger.LogDebug($"Added SwaggerUI support for handling OData APIs");
+            services.Configure<ODataSwaggerOptions>(configuration.GetSection("ODataSwaggerOptions"));
+            services.IncludeRegistry<ODataSwaggerRegistry>();
+
+            services.AddSwaggerGen(ops => {
+                ops.SupportNonNullableReferenceTypes();
+                ops.UseAllOfToExtendReferenceSchemas();
+                ops.SwaggerDoc("v1", new OpenApiInfo {Title = "TEST TITLE", Version = "v1"});
+            });
+
+            logger.LogDebug("Configuring OData Core Services...");
+            services.AddOData((options, svcs) => {
+                var odataContext = svcs.GetRequiredService<ODataSwaggerContext>();
+                foreach(var edm in odataContext.ResolveEdmModels())
+                {
+                    string name = edm.EntityContainer.Name;
+
+                    logger.LogDebug($"\tRegistered EDM with Prefix: [{name}]");
+                    options.AddModel(name, edm);
+                }
+            });
+            logger.LogDebug($"--> DONE <--");
 
             return services;
         }
 
-        public static IApplicationBuilder UseSwaggerWithOData(this IApplicationBuilder app, IContainer container, ODataSwaggerContext options)
+        public static IApplicationBuilder UseSwaggerWithOData(this IApplicationBuilder app, ODataSwaggerContext context)
         {
             app.UseEndpoints(routeBuilder => {
-                routeBuilder.MapSwaggerWithODataRoute(options);
+                routeBuilder.MapControllers();
             });
 
+            app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                if(options.SwaggerUIOptions.DocumentTitle is null){
+                if(context.SwaggerUIOptions.DocumentTitle is null){
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "IGT.Swashbuckle.OData.SampleWebApi v1");
                 } else {
-                    c.SwaggerEndpoint(options.SwaggerInfoUrl, options.SwaggerUIOptions.DocumentTitle);
+                    c.SwaggerEndpoint(ODataSwaggerOptions.DEFAULT_SWAGGER_INFO_ENDPOINT, context.SwaggerUIOptions.DocumentTitle);
                 }
             });
+            
+
             return app;
         }
 
-        public static IApplicationBuilder UseSwaggerWithOData(this IApplicationBuilder app, Action<IContainer, ODataSwaggerContext>? optionsSetup = null)
+        public static IApplicationBuilder UseSwaggerWithOData(this IApplicationBuilder app, Action<IServiceProvider, ODataSwaggerContext>? optionsSetup = null)
         {
             // Create a new DI scope for the OData Middleware to use
-            using var services = app.ApplicationServices.CreateScope();
-
-            // Setup a new StructureMap container which extends the host ServiceCollection
-            var container = new Container();
-            container.Configure(config => {
-                config.AddRegistry(new ODataSwaggerRegistry());
-                config.Populate(services.ServiceProvider as IServiceCollection);
-            });
+            var services = app.ApplicationServices;
 
             // Check to see if there is any configuration data that has been configured and monitor it for changes
-            var configMonitor = services.ServiceProvider.GetRequiredService<IOptionsMonitor<ODataSwaggerContext>>();
-            ODataSwaggerContext? latestConfig = new ODataSwaggerContext(container.GetInstance<IAssemblyProvider>());
-            configMonitor.OnChange<ODataSwaggerContext>(x => GetLatestConfig(x, latestConfig));
+            var context = services.GetRequiredService<ODataSwaggerContext>();
 
             if (optionsSetup != null)
-                optionsSetup?.Invoke(container, latestConfig);
+                optionsSetup?.Invoke(services, context);
 
-            return app.UseSwaggerWithOData(container, latestConfig);
+            return app.UseSwaggerWithOData(context);
         }
-
-        private static T? GetLatestConfig<T>(T updatedConfig, T? latestConfig) => latestConfig?.GetHashCode() != updatedConfig?.GetHashCode()
-                            ? updatedConfig
-                            : latestConfig;
     }
 }
