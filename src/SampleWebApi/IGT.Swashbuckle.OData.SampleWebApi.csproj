@@ -1,15 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>fbd59445958ab3d804e0427626909da4</UserSecretsId>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0" NoWarn="NU1605"/>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.0" NoWarn="NU1605"/>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1"/>
     <PackageReference Include="NSwag.AspNetCore" Version="13.10.8"/>
     <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.1.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ApiExplorer" Version="2.2.0"/>
+    <PackageReference Include="Lamar.Microsoft.DependencyInjection" Version="5.0.3"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../IGT.SwaggerUI.AspNetCore.OData/IGT.SwaggerUI.AspNetCore.OData.csproj" />
+    <ProjectReference Include="../IGT.SwaggerUI.AspNetCore.OData/IGT.SwaggerUI.AspNetCore.OData.csproj"/>
   </ItemGroup>
 </Project>

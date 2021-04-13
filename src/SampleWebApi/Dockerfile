@@ -11,10 +11,10 @@ COPY ["src/SampleWebApi/IGT.Swashbuckle.OData.SampleWebApi.csproj", "src/SampleW
 RUN dotnet restore "src/SampleWebApi/IGT.Swashbuckle.OData.SampleWebApi.csproj"
 COPY . .
 WORKDIR "/src/src/SampleWebApi"
-RUN dotnet build "IGT.Swashbuckle.OData.SampleWebApi.csproj" -c Release -o /app/build
+RUN dotnet build "IGT.Swashbuckle.OData.SampleWebApi.csproj" -c Development -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "IGT.Swashbuckle.OData.SampleWebApi.csproj" -c Release -o /app/publish
+RUN dotnet run "IGT.Swashbuckle.OData.SampleWebApi.csproj" -c Development -o /app/publish
 
 FROM base AS final
 WORKDIR /app

@@ -1,73 +1,75 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using IGT.SwaggerUI.AspNetCore.OData.Extensions;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.ReDoc;
+using IGT.SwaggerUI.AspNetCore.OData;
+using Microsoft.Extensions.Logging;
+using Lamar;
 
 namespace IGT.Swashbuckle.OData.SampleWebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly ILoggerFactory loggerFactory;
+
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
+            this.loggerFactory = loggerFactory;
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        // This method gets called by Lamar. Should be used as a stand-in for ConfigureServices()
+        public void ConfigureContainer(ServiceRegistry services)
         {
+            // services.AddMvc(ops =>
+            //     {
+            //         ops.Conventions.Add(new ODataSwaggerAppConvention(loggerFactory.CreateLogger(typeof(ODataSwaggerAppConvention))));
+            //     })
+            //     .AddControllersAsServices();
 
-            services.AddControllers();
             // services.AddSwaggerGen(c =>
             // {
             //     c.SwaggerDoc("v1", new OpenApiInfo { Title = "IGT.Swashbuckle.OData.SampleWebApi", Version = "v1" });
+            //     c.SupportNonNullableReferenceTypes();
             // });
-            services.AddOpenApiDocument();
+
+            services.AddSwaggerWithOData(Configuration, loggerFactory.CreateLogger("Debug"));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
                 // app.UseSwagger();
-                // app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "IGT.Swashbuckle.OData.SampleWebApi v1"));
             }
 
-            app.UseHttpsRedirection();
-            app.UseRouting();
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
+            
+            app.UseSwaggerWithOData((container, options) =>
             {
-                endpoints.MapControllers();
+                //Configure any overrides for both SwaggerUI and SwaggerGen here
             });
-            UseOpenApiDocs(app);
+
+            app.UseHttpsRedirection();
+            // app.UseRouting();
+
+            // UseOpenApiDocs(app);
         }
 
-        private static void UseOpenApiDocs(IApplicationBuilder app)
-        {
-            app.UseOpenApi();
-            app.UseSwaggerUi3(settings =>
-            {
-                // Config the SwaggerUI settings here
-            });
-            app.UseReDoc(options =>
-            {
-                options.SpecUrl = "/swagger/v1/swagger.json";
-            });
-        }
+        // private static void UseOpenApiDocs(IApplicationBuilder app)
+        // {
+        //     app.UseSwaggerUi3(settings =>
+        //     {
+        //         // Config the SwaggerUI settings here
+        //         settings.DocumentTitle = "OData API Documentation";
+        //     });
+        // }
     }
 }

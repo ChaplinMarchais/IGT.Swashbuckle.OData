@@ -1,7 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1"/>
@@ -9,11 +13,11 @@
     <PackageReference Include="Microsoft.OpenApi" Version="1.*"/>
     <PackageReference Include="Microsoft.OpenApi.OData" Version="1.*"/>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.*"/>
-<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.ModelBinding" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Controllers" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.ApiExplorer" />-->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ApiExplorer" Version="2.2.0"/>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.*"/>
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.*"/>
+    <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.0-rc"/>
+    <PackageReference Include="Lamar.Microsoft.DependencyInjection" Version="5.0.3"/>
+    <PackageReference Include="Microsoft.OData.Core" Version="7.8.3"/>
   </ItemGroup>
 </Project>
