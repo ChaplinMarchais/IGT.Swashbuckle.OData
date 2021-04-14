@@ -30,6 +30,6 @@ jobs:
         source-url: https://nuget.pkg.github.com/ChaplinMarchais/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      if: ${{ steps.Pack.Outcome == success }}
+      if: ${{ steps.Pack.Outcome == 'success' }}
     - name: Push pkg
       run: dotnet nuget push src/IGT.SwaggerUI.AspNetCore.OData/bin/Release/*.nupkg
