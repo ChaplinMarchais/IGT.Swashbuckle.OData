@@ -1,0 +1,37 @@
+name: Build and Publish NuGet Package
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      CSPROJ_RELATIVE_PATH: "src/IGT.SwaggerUI.AspNetCore.OData/*.csproj"
+      SLN_ROOT: "src/*.sln"
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Build Env
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build $env.SLN_ROOT -c Release --no-restore
+    - name: Test
+      run: dotnet test $env.SLN_ROOT --no-build --verbosity normal
+    - name: Pack
+      run: dotnet pack $env.CSPROJ_RELATIVE_PATH -c Release -v
+    - name: Publish
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+        source-url: https://nuget.pkg.github.com/ChaplinMarchais/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      if: ${{ steps.Pack.Outcome == 'success' }}
+    - name: Push pkg
+      run: dotnet nuget push src/IGT.SwaggerUI.AspNetCore.OData/bin/Release/*.nupkg
