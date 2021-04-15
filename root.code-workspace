@@ -1,0 +1,14 @@
+{
+    "extensions":
+        {
+            "recommendations": [
+                "roadsidejesus.csharp-helper"
+            ]
+    	}
+	,
+    "folders": [
+        {
+            "path": "."
+        }
+    ]
+}

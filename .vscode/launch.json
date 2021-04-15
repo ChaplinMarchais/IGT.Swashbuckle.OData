@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Sample Web API",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/SampleWebApi/bin/Debug/net5.0/IGT.Swashbuckle.OData.SampleWebApi.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/SampleWebApi/bin/Debug/net5.0/",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "uriFormat": "http://localhost:%s/swagger",
+                "action": "debugWithChrome",
+                "pattern": "\\\\bNow listening on:\\\\s+(https?://\\\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {}
+        },
+        {
+            "name": "Docker .NET Core Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "netCore": {
+                "appProject": "${workspaceFolder}/src/SampleWebApi/IGT.Swashbuckle.OData.SampleWebApi.csproj"
+            }
+        }
+    ]
+}
