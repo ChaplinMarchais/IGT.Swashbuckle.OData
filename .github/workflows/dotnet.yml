@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CSPROJ_RELATIVE_PATH: "src/IGT.SwaggerUI.AspNetCore.OData/*.csproj"
-      SLN_ROOT: "src/*.sln"
+      SLN_ROOT: "src/IGT.SwaggerUI.AspNetCore.OData.sln"
     steps:
     - uses: actions/checkout@v2
     - name: Setup Build Env
@@ -20,11 +20,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build $env.SLN_ROOT -c Release --no-restore
+      run: dotnet build ${{env.SLN_ROOT}} -c Release --no-restore
     - name: Test
-      run: dotnet test $env.SLN_ROOT --no-build --verbosity normal
+      run: dotnet test ${{env.SLN_ROOT}} --no-build --verbosity normal
     - name: Pack
-      run: dotnet pack $env.CSPROJ_RELATIVE_PATH -c Release -v
+      run: dotnet pack ${{env.SLN_ROOT}} -c Release -v
     - name: Publish
       uses: actions/setup-dotnet@v1
       with:
