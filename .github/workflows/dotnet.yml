@@ -20,11 +20,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ${{env.CSPROJ_RELATIVE_PATH}} -c Release --no-restore
+      run: dotnet build $env.SLN_ROOT -c Release --no-restore
     - name: Test
-      run: dotnet test ${{env.SLN_ROOT}} --no-build --verbosity normal
+      run: dotnet test $env.SLN_ROOT --no-build --verbosity normal
     - name: Pack
-      run: dotnet pack ${{env.CSPROJ_RELATIVE_PATH}} -c Release -v
+      run: dotnet pack $env.CSPROJ_RELATIVE_PATH -c Release -v
     - name: Publish
       uses: actions/setup-dotnet@v1
       with:
