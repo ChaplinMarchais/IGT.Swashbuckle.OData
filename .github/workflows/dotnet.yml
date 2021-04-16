@@ -32,6 +32,8 @@ jobs:
         source-url: https://nuget.pkg.github.com/ChaplinMarchais/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        NUPKG_LOCATOR: 'src/IGT.SwaggerUI.AspNetCore.OData/bin/Release/*.nupkg'
+        source-url: https://nuget.pkg.github.com/ChaplinMarchais/index.json
       if: ${{ steps.Pack.Outcome == 'success' }}
-    - name: Push pkg
-      run: dotnet nuget push src/IGT.SwaggerUI.AspNetCore.OData/bin/Release/*.nupkg
+    - name: Push Nuget Package to Github Registry
+      run: dotnet nuget push ${{env.NUPKG_LOCATOR}} -k ${{env.NUGET_AUTH_TOKEN}} -s ${{env.source-url}} --skip-duplicate --no-symbols
