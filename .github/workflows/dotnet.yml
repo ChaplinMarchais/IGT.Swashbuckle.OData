@@ -30,5 +30,4 @@ jobs:
     - name: Pack
       run: dotnet pack ${{env.SLN_ROOT}} -c Release -v d
     - name: Push to Github Registry
-      if: ${{ steps.Pack.Outcome == 'success' }}
       run: dotnet nuget push ${{env.NUPKG_LOCATOR}} -k ${{env.NUGET_AUTH_TOKEN}} -s ${{env.source-url}} --skip-duplicate --no-symbols true
