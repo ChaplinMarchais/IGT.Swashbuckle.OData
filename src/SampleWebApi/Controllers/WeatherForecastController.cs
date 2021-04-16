@@ -11,6 +11,7 @@ namespace IGT.Swashbuckle.OData.SampleWebApi.Controllers
 {
     // [ApiController]
     [Route("[controller]")]
+    [ApiExplorerSettings(IgnoreApi = false)]
     public class WeatherForecastController : ODataController
     {
         private static readonly string[] Summaries = new[]
