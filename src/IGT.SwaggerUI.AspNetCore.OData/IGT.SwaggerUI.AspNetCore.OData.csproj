@@ -9,6 +9,7 @@
     <Version>1.0.1-preview1</Version>
     <Authors>Chaplin Marchais, Paul Pederson</Authors>
     <Company>IMPETUS GLOBAL TECHNOLOGY Inc.</Company>
+    <RepositoryUrl>https://github.com/ChaplinMarchais/IGT.Swashbuckle.OData</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup>
