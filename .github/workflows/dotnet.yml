@@ -29,6 +29,7 @@ jobs:
       run: dotnet test ${{env.SLN_ROOT}} --no-build --verbosity normal
     - name: Pack
       run: dotnet pack ${{env.SLN_ROOT}} -c Release -v d
-    - name: Publish to Github Registry
+    - name: Publish
       if: ${{ steps.Pack.Outcome == 'success' }}
+    - name: Push to Github Registry
       run: dotnet nuget push ${{env.NUPKG_LOCATOR}} -k ${{env.NUGET_AUTH_TOKEN}} -s ${{env.source-url}} --skip-duplicate --no-symbols
