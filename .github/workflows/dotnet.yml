@@ -9,29 +9,25 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      CSPROJ_RELATIVE_PATH: "src/IGT.SwaggerUI.AspNetCore.OData/*.csproj"
-      SLN_ROOT: "src/IGT.SwaggerUI.AspNetCore.OData.sln"
+      CSPROJ_RELATIVE_PATH: 'src/IGT.SwaggerUI.AspNetCore.OData/IGT.SwaggerUI.AspNetCore.OData.csproj'
+      SLN_ROOT: 'src/IGT.SwaggerUI.AspNetCore.OData.sln'
+      NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      NUPKG_LOCATOR: 'src/IGT.SwaggerUI.AspNetCore.OData/bin/Release/*.nupkg'
+      source-url: https://nuget.pkg.github.com/ChaplinMarchais/index.json
     steps:
     - uses: actions/checkout@v2
     - name: Setup Build Env
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+        source-url: https://nuget.pkg.github.com/ChaplinMarchais/index.json
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ${{env.SLN_ROOT}}
     - name: Build
       run: dotnet build ${{env.SLN_ROOT}} -c Release --no-restore
     - name: Test
       run: dotnet test ${{env.SLN_ROOT}} --no-build --verbosity normal
     - name: Pack
-      run: dotnet pack ${{env.SLN_ROOT}} -c Release -v
-    - name: Publish
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-        source-url: https://nuget.pkg.github.com/ChaplinMarchais/index.json
-      env:
-        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      if: ${{ steps.Pack.Outcome == 'success' }}
-    - name: Push pkg
-      run: dotnet nuget push src/IGT.SwaggerUI.AspNetCore.OData/bin/Release/*.nupkg
+      run: dotnet pack ${{env.SLN_ROOT}} -c Release -v d
+    - name: Push to Github Registry
+      run: dotnet nuget push ${{env.NUPKG_LOCATOR}} -k ${{env.NUGET_AUTH_TOKEN}} -s ${{env.source-url}} --skip-duplicate --no-symbols true
