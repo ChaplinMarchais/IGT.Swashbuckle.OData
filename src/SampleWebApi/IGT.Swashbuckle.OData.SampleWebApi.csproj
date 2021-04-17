@@ -12,8 +12,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.1.1"/>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ApiExplorer" Version="2.2.0"/>
     <PackageReference Include="Lamar.Microsoft.DependencyInjection" Version="5.0.3"/>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../IGT.SwaggerUI.AspNetCore.OData/IGT.SwaggerUI.AspNetCore.OData.csproj"/>
+    <PackageReference Include="IGT.AspNetCore.SwaggerUI.OData" Version="1.0.1-preview1" />
   </ItemGroup>
 </Project>
