@@ -1,8 +1,10 @@
-name: Build and Publish NuGet Package
+name: Build and Test
 
 on:
-  pull_request:
-    branches: [ main ]
+  push:
+    branches:
+      - "Development/**"
+      - "dependabot/**"
 
 jobs:
   build:
@@ -20,14 +22,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-        source-url: https://nuget.pkg.github.com/ChaplinMarchais/index.json
+        source-url: ${{ env.source-url }}
     - name: Restore dependencies
       run: dotnet restore ${{env.SLN_ROOT}}
     - name: Build
       run: dotnet build ${{env.SLN_ROOT}} -c Release --no-restore
     - name: Test
-      run: dotnet test ${{env.SLN_ROOT}} --no-build --verbosity normal
-    - name: Pack
-      run: dotnet pack ${{env.SLN_ROOT}} -c Release -v d
-    - name: Push to Github Registry
-      run: dotnet nuget push ${{env.NUPKG_LOCATOR}} -k ${{env.NUGET_AUTH_TOKEN}} -s ${{env.source-url}} --skip-duplicate --no-symbols true
+      run: dotnet test ${{env.SLN_ROOT}} --no-build --verbosity normal --no-restore
